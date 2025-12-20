@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Настройки - Мессенджер</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="settings-container">
+    <!-- Боковая панель с разделами -->
+    <div class="settings-sidebar">
+      <div class="settings-header">
+        <button class="back-btn" onclick="window.location.href='index.html'">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <h2>Настройки</h2>
+      </div>
+      
+      <div class="settings-menu">
+        <button class="settings-menu-item active" data-section="profile">
+          <i class="fas fa-user"></i>
+          <span>Профиль</span>
+        </button>
+        <button class="settings-menu-item" data-section="notifications">
+          <i class="fas fa-bell"></i>
+          <span>Уведомления</span>
+        </button>
+        <button class="settings-menu-item" data-section="privacy">
+          <i class="fas fa-lock"></i>
+          <span>Конфиденциальность</span>
+        </button>
+        <button class="settings-menu-item" data-section="data">
+          <i class="fas fa-database"></i>
+          <span>Данные и память</span>
+        </button>
+        <button class="settings-menu-item" data-section="appearance">
+          <i class="fas fa-palette"></i>
+          <span>Внешний вид</span>
+        </button>
+        <button class="settings-menu-item" data-section="language">
+          <i class="fas fa-language"></i>
+          <span>Язык</span>
+        </button>
+        <button class="settings-menu-item" data-section="about">
+          <i class="fas fa-info-circle"></i>
+          <span>О программе</span>
+        </button>
+        <button class="settings-menu-item logout-btn" id="logoutBtn">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>Выйти из аккаунта</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Основная область настроек -->
+    <div class="settings-content">
+      <!-- Профиль -->
+      <div class="settings-section active" id="profile">
+        <h3>Профиль</h3>
+        
+        <div class="profile-card">
+          <div class="profile-avatar-large" id="profileAvatar">А</div>
+          <input type="file" id="avatarInput" accept="image/*" style="display: none;">
+          <button class="change-avatar-btn" onclick="document.getElementById('avatarInput').click()">
+            <i class="fas fa-camera"></i>
+            Изменить фото
+          </button>
+          <button class="remove-avatar-btn" onclick="removeAvatar()" style="display: none;">
+            <i class="fas fa-trash"></i>
+            Удалить фото
+          </button>
+        </div>
+        
+        <div class="settings-group">
+          <div class="settings-item">
+            <label>Имя пользователя</label>
+            <input type="text" id="settingsUsername" readonly>
+          </div>
+          <div class="settings-item">
+            <label>Полное имя</label>
+            <input type="text" id="settingsFullName">
+          </div>
+          <div class="settings-item">
+            <label>Email</label>
+            <input type="email" id="settingsEmail">
+          </div>
+          <div class="settings-item">
+            <label>О себе</label>
+            <textarea id="settingsBio" placeholder="Расскажите о себе..."></textarea>
+          </div>
+        </div>
+        
+        <button class="btn-save" onclick="saveProfile()">
+          <i class="fas fa-save"></i>
+          Сохранить изменения
+        </button>
+      </div>
+
+      <!-- Уведомления -->
+      <div class="settings-section" id="notifications">
+        <h3>Уведомления и звуки</h3>
+        
+        <div class="settings-group">
+          <div class="settings-item toggle-item">
+            <div>
+              <label>Уведомления</label>
+              <p class="description">Показывать уведомления о новых сообщениях</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="notificationsEnabled" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div class="settings-item toggle-item">
+            <div>
+              <label>Звук уведомлений</label>
+              <p class="description">Воспроизводить звук при получении сообщения</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="notificationSound" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div class="settings-item toggle-item">
+            <div>
+              <label>Предпросмотр сообщений</label>
+              <p class="description">Показывать текст сообщения в уведомлении</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="messagePreview" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div class="settings-item toggle-item">
+            <div>
+              <label>Вибрация</label>
+              <p class="description">Вибрировать при получении сообщения</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="vibration">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Конфиденциальность -->
+      <div class="settings-section" id="privacy">
+        <h3>Конфиденциальность и безопасность</h3>
+        
+        <div class="settings-group">
+          <div class="settings-item">
+            <label>Последнее посещение</label>
+            <select id="lastSeenPrivacy">
+              <option value="everyone">Все</option>
+              <option value="contacts">Мои контакты</option>
+              <option value="nobody">Никто</option>
+            </select>
+          </div>
+          
+          <div class="settings-item">
+            <label>Фото профиля</label>
+            <select id="profilePhotoPrivacy">
+              <option value="everyone">Все</option>
+              <option value="contacts">Мои контакты</option>
+              <option value="nobody">Никто</option>
+            </select>
+          </div>
+          
+          <div class="settings-item toggle-item">
+            <div>
+              <label>Двухфакторная аутентификация</label>
+              <p class="description">Дополнительная защита аккаунта</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="twoFactorAuth">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div class="settings-item">
+            <button class="btn-secondary" onclick="changePassword()">
+              <i class="fas fa-key"></i>
+              Изменить пароль
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Данные и память -->
+      <div class="settings-section" id="data">
+        <h3>Данные и память</h3>
+        
+        <div class="settings-group">
+          <div class="settings-item">
+            <label>Использование памяти</label>
+            <div class="storage-info">
+              <div class="storage-bar">
+                <div class="storage-used" style="width: 35%"></div>
+              </div>
+              <p class="storage-text">Использовано: 350 МБ из 1 ГБ</p>
+            </div>
+          </div>
+          
+          <div class="settings-item toggle-item">
+            <div>
+              <label>Автозагрузка медиа</label>
+              <p class="description">Автоматически загружать фото и видео</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="autoDownload" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          
+          <div class="settings-item">
+            <button class="btn-secondary" onclick="clearCache()">
+              <i class="fas fa-trash"></i>
+              Очистить кэш
+            </button>
+          </div>
+          
+          <div class="settings-item">
+            <button class="btn-secondary" onclick="exportData()">
+              <i class="fas fa-download"></i>
+              Экспортировать данные
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Внешний вид -->
+      <div class="settings-section" id="appearance">
+        <h3>Внешний вид</h3>
+        
+        <div class="settings-group">
+          <div class="settings-item">
+            <label>Тема</label>
+            <div class="theme-selector">
+              <button class="theme-option active" data-theme="light">
+                <i class="fas fa-sun"></i>
+                <span>Светлая</span>
+              </button>
+              <button class="theme-option" data-theme="dark">
+                <i class="fas fa-moon"></i>
+                <span>Тёмная</span>
+              </button>
+              <button class="theme-option" data-theme="auto">
+                <i class="fas fa-adjust"></i>
+                <span>Авто</span>
+              </button>
+            </div>
+          </div>
+          
+          <div class="settings-item">
+            <label>Размер шрифта</label>
+            <div class="font-size-selector">
+              <button class="font-size-btn" data-size="small">A</button>
+              <button class="font-size-btn active" data-size="medium">A</button>
+              <button class="font-size-btn" data-size="large">A</button>
+            </div>
+          </div>
+          
+          <div class="settings-item">
+            <label>Цветовая схема</label>
+            <div class="color-scheme-selector">
+              <button class="color-option active" data-color="blue-green" style="background: linear-gradient(135deg, #3498db, #2ecc71)"></button>
+              <button class="color-option" data-color="purple" style="background: linear-gradient(135deg, #667eea, #764ba2)"></button>
+              <button class="color-option" data-color="orange" style="background: linear-gradient(135deg, #f093fb, #f5576c)"></button>
+              <button class="color-option" data-color="cyan" style="background: linear-gradient(135deg, #4facfe, #00f2fe)"></button>
+            </div>
+          </div>
+          
+          <div class="settings-item toggle-item">
+            <div>
+              <label>Анимации</label>
+              <p class="description">Включить анимации интерфейса</p>
+            </div>
+            <label class="toggle">
+              <input type="checkbox" id="animations" checked>
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Язык -->
+      <div class="settings-section" id="language">
+        <h3>Язык</h3>
+        
+        <div class="settings-group">
+          <div class="settings-item">
+            <label>Язык интерфейса</label>
+            <select id="languageSelect">
+              <option value="ru" selected>Русский</option>
+              <option value="en">English</option>
+              <option value="uk">Українська</option>
+              <option value="de">Deutsch</option>
+              <option value="fr">Français</option>
+              <option value="es">Español</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <!-- О программе -->
+      <div class="settings-section" id="about">
+        <h3>О программе</h3>
+        
+        <div class="settings-group">
+          <div class="about-card">
+            <div class="about-logo">
+              <i class="fas fa-comments"></i>
+            </div>
+            <h4>Мессенджер</h4>
+            <p class="version">Версия 1.0.0</p>
+            <p class="description">
+              Быстрый и безопасный мессенджер с поддержкой видео звонков,
+              голосовых сообщений и трансляции экрана.
+            </p>
+          </div>
+          
+          <div class="settings-item">
+            <button class="btn-secondary" onclick="checkUpdates()">
+              <i class="fas fa-sync"></i>
+              Проверить обновления
+            </button>
+          </div>
+          
+          <div class="settings-item">
+            <button class="btn-secondary" onclick="showLicense()">
+              <i class="fas fa-file-contract"></i>
+              Лицензия
+            </button>
+          </div>
+          
+          <div class="settings-item">
+            <button class="btn-secondary" onclick="showPrivacyPolicy()">
+              <i class="fas fa-shield-alt"></i>
+              Политика конфиденциальности
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="app-settings.js"></script>
+  <script src="user-manager.js"></script>
+  <script src="settings.js"></script>
+</body>
+</html>

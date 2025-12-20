@@ -1,0 +1,27 @@
+# Database
+*.db
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.env
+
+# Build files
+build/
+dist/
+*.spec
+*.exe
+Messenger-App/
+
+# Batch files (not needed for cloud)
+upload-to-github.bat
+build-exe.bat
+install-dependencies.bat
+start-server.bat
+start-server.sh
+
+# IDE
+.vscode/
+.idea/

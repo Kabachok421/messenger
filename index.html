@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Мессенджер</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Боковая панель -->
+    <div class="sidebar">
+      <div class="sidebar-header">
+        <button class="menu-btn" id="menuBtn" title="Меню"><i class="fas fa-bars"></i></button>
+        <input type="text" class="search-input" placeholder="Поиск" id="searchInput">
+        <button class="menu-btn" id="settingsBtn" title="Настройки">
+          <i class="fas fa-cog"></i>
+        </button>
+      </div>
+      
+      <div class="sidebar-tabs">
+        <button class="sidebar-tab active" data-tab="chats">
+          <i class="fas fa-comments"></i>
+          <span>Чаты</span>
+        </button>
+        <button class="sidebar-tab" data-tab="channels">
+          <i class="fas fa-bullhorn"></i>
+          <span>Каналы</span>
+        </button>
+      </div>
+      
+      <div class="chat-list" id="chatList">
+        <!-- Чаты будут добавлены через JavaScript -->
+      </div>
+      
+      <div class="channel-list" id="channelList" style="display: none;">
+        <!-- Каналы будут добавлены через JavaScript -->
+      </div>
+      
+      <button class="create-btn" id="createBtn" title="Создать">
+        <i class="fas fa-plus"></i>
+      </button>
+    </div>
+
+    <!-- Основная область чата -->
+    <div class="chat-area">
+      <div class="chat-header">
+        <div class="chat-info">
+          <div class="avatar">А</div>
+          <div class="chat-details">
+            <div class="chat-name">Выберите чат</div>
+            <div class="chat-status">онлайн</div>
+          </div>
+        </div>
+        <div class="chat-actions">
+          <button class="action-btn" id="voiceCallBtn" title="Голосовой звонок"><i class="fas fa-phone"></i></button>
+          <button class="action-btn" id="videoCallBtn" title="Видео звонок"><i class="fas fa-video"></i></button>
+          <button class="action-btn" id="screenShareBtn" title="Трансляция экрана"><i class="fas fa-desktop"></i></button>
+          <button class="action-btn"><i class="fas fa-search"></i></button>
+          <button class="action-btn"><i class="fas fa-ellipsis-v"></i></button>
+        </div>
+      </div>
+
+      <div class="pinned-message-bar" id="pinnedMessageBar">
+        <div class="pinned-icon">📌</div>
+        <div class="pinned-content">
+          <div class="pinned-author" id="pinnedAuthor">Закреплённое сообщение</div>
+          <div class="pinned-text" id="pinnedText"></div>
+        </div>
+        <button class="unpin-btn" id="unpinBtn" title="Открепить">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <div class="messages-container" id="messagesContainer">
+        <div class="welcome-message">
+          <h2>Добро пожаловать в Мессенджер</h2>
+          <p>Выберите чат из списка слева</p>
+        </div>
+      </div>
+
+      <div class="reply-preview" id="replyPreview" style="display: none;">
+        <div class="reply-content">
+          <div class="reply-header">Ответ на:</div>
+          <div class="reply-text" id="replyText"></div>
+        </div>
+        <button class="cancel-reply-btn" id="cancelReplyBtn"><i class="fas fa-times"></i></button>
+      </div>
+
+      <div class="message-input-area">
+        <button class="attach-btn" id="attachBtn"><i class="fas fa-paperclip"></i></button>
+        <div class="input-wrapper">
+          <div class="message-input" id="messageInput" contenteditable="true" data-placeholder="Написать сообщение..."></div>
+        </div>
+        <button class="emoji-btn" id="emojiBtn"><i class="far fa-smile"></i></button>
+        <button class="voice-btn" id="voiceBtn"><i class="fas fa-microphone"></i></button>
+        <button class="send-btn" id="sendBtn" style="display: none;"><i class="fas fa-paper-plane"></i></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Меню вложений -->
+  <div class="attach-menu" id="attachMenu">
+    <div class="attach-menu-overlay"></div>
+    <div class="attach-menu-content">
+      <button class="attach-menu-item" data-type="image">
+        <div class="attach-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+          <i class="fas fa-image"></i>
+        </div>
+        <span>Фото или видео</span>
+      </button>
+      <button class="attach-menu-item" data-type="file">
+        <div class="attach-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+          <i class="fas fa-file"></i>
+        </div>
+        <span>Файл</span>
+      </button>
+      <button class="attach-menu-item" data-type="video">
+        <div class="attach-icon" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+          <i class="fas fa-video"></i>
+        </div>
+        <span>Видео</span>
+      </button>
+      <button class="attach-menu-item" data-type="audio">
+        <div class="attach-icon" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
+          <i class="fas fa-music"></i>
+        </div>
+        <span>Музыка</span>
+      </button>
+      <button class="attach-menu-item" data-type="location">
+        <div class="attach-icon" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <span>Геолокация</span>
+      </button>
+      <button class="attach-menu-item" data-type="contact">
+        <div class="attach-icon" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+          <i class="fas fa-user"></i>
+        </div>
+        <span>Контакт</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Панель эмодзи -->
+  <div class="emoji-picker" id="emojiPicker">
+    <div class="emoji-tabs">
+      <button class="emoji-tab active" data-category="smileys">😊</button>
+      <button class="emoji-tab" data-category="animals">🐶</button>
+      <button class="emoji-tab" data-category="food">🍕</button>
+      <button class="emoji-tab" data-category="activities">⚽</button>
+      <button class="emoji-tab" data-category="travel">✈️</button>
+      <button class="emoji-tab" data-category="objects">💡</button>
+      <button class="emoji-tab" data-category="symbols">❤️</button>
+    </div>
+    <div class="emoji-search">
+      <input type="text" placeholder="Поиск эмодзи..." id="emojiSearch">
+    </div>
+    <div class="emoji-grid" id="emojiGrid"></div>
+  </div>
+
+  <!-- Панель стикеров -->
+  <div class="sticker-picker" id="stickerPicker">
+    <div class="sticker-tabs">
+      <button class="sticker-tab active" data-pack="pack1">Набор 1</button>
+      <button class="sticker-tab" data-pack="pack2">Набор 2</button>
+      <button class="sticker-tab" data-pack="custom">Свои</button>
+    </div>
+    <div class="sticker-grid" id="stickerGrid">
+      <div class="sticker-placeholder">
+        <i class="fas fa-plus-circle"></i>
+        <p>Добавьте свои стикеры</p>
+        <button class="add-sticker-btn" id="addStickerBtn">Добавить стикеры</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Контекстное меню сообщения -->
+  <div class="message-context-menu" id="messageContextMenu">
+    <button class="context-menu-item" data-action="reply">
+      <i class="fas fa-reply"></i>
+      <span>Ответить</span>
+    </button>
+    <button class="context-menu-item" data-action="edit">
+      <i class="fas fa-edit"></i>
+      <span>Редактировать</span>
+    </button>
+    <button class="context-menu-item" data-action="copy">
+      <i class="fas fa-copy"></i>
+      <span>Копировать</span>
+    </button>
+    <button class="context-menu-item" data-action="forward">
+      <i class="fas fa-share"></i>
+      <span>Переслать</span>
+    </button>
+    <button class="context-menu-item" data-action="pin">
+      <i class="fas fa-thumbtack"></i>
+      <span>Закрепить</span>
+    </button>
+    <button class="context-menu-item danger" data-action="delete">
+      <i class="fas fa-trash"></i>
+      <span>Удалить</span>
+    </button>
+  </div>
+
+  <input type="file" id="fileInput" style="display: none;" multiple>
+  <input type="file" id="imageInput" style="display: none;" accept="image/*" multiple>
+  <input type="file" id="videoInput" style="display: none;" accept="video/*">
+  <input type="file" id="audioInput" style="display: none;" accept="audio/*">
+  <input type="file" id="stickerInput" style="display: none;" accept="image/*" multiple>
+
+  <!-- Модальное окно пересылки -->
+  <div class="forward-modal" id="forwardModal">
+    <div class="forward-overlay"></div>
+    <div class="forward-container">
+      <div class="forward-header">
+        <h3>Переслать сообщение</h3>
+        <button class="close-forward-btn" id="closeForwardBtn">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="forward-search">
+        <input type="text" placeholder="Поиск чатов..." id="forwardSearch">
+      </div>
+      <div class="forward-list" id="forwardList">
+        <!-- Список чатов для пересылки -->
+      </div>
+      <div class="forward-actions">
+        <button class="btn-secondary" id="cancelForwardBtn">Отмена</button>
+        <button class="btn-primary" id="confirmForwardBtn">Переслать</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно звонка -->
+  <div class="call-modal" id="callModal">
+    <div class="call-container">
+      <div class="call-header">
+        <h3 id="callTitle">Видео звонок</h3>
+        <button class="close-call-btn" id="closeCallBtn"><i class="fas fa-times"></i></button>
+      </div>
+      
+      <div class="video-container">
+        <video id="remoteVideo" autoplay playsinline></video>
+        <video id="localVideo" autoplay playsinline muted></video>
+        <div class="call-info" id="callInfo">
+          <div class="caller-name" id="callerName">Анна Иванова</div>
+          <div class="call-status" id="callStatus">Соединение...</div>
+        </div>
+      </div>
+      
+      <div class="call-controls">
+        <button class="call-control-btn" id="toggleMicBtn" title="Микрофон">
+          <i class="fas fa-microphone" id="micIcon"></i>
+        </button>
+        <button class="call-control-btn" id="toggleCameraBtn" title="Камера">
+          <i class="fas fa-video" id="cameraIcon"></i>
+        </button>
+        <button class="call-control-btn end-call" id="endCallBtn" title="Завершить">
+          <i class="fas fa-phone-slash"></i>
+        </button>
+        <button class="call-control-btn" id="toggleScreenBtn" title="Демонстрация экрана">
+          <i class="fas fa-desktop" id="screenIcon"></i>
+        </button>
+        <button class="call-control-btn" id="toggleSpeakerBtn" title="Динамик">
+          <i class="fas fa-volume-up" id="speakerIcon"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="client-config.js"></script>
+  <script src="app-settings.js"></script>
+  <script src="user-manager.js"></script>
+  <script src="update-manager.js"></script>
+  <script src="channels.js"></script>
+  <script src="call.js"></script>
+  <script src="messages.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
